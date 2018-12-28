@@ -12,6 +12,21 @@ class m181228_222111_article_table extends Migration
      */
     public function safeUp()
     {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function safeDown()
+    {
+        echo "m181228_222111_article_table cannot be reverted.\n";
+
+        return false;
+    }
+
+    // Use up()/down() to run migration code without a transaction.
+    public function up()
+    {
         $this->createTable('article', [
             'id' => $this->primaryKey(),
             'title' => $this->string(),
@@ -25,28 +40,9 @@ class m181228_222111_article_table extends Migration
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function safeDown()
-    {
-        echo "m181228_222111_article_table cannot be reverted.\n";
-
-        return false;
-    }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
     public function down()
     {
-        echo "m181228_222111_article_table cannot be reverted.\n";
-
-        return false;
+        $this->dropTable('article');
     }
-    */
+
 }
