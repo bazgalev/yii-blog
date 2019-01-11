@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "tag".
@@ -43,11 +44,33 @@ class Tag extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getArticleTags()
+
+    public function getArticles()
     {
-        return $this->hasMany(ArticleTag::className(), ['tag_id' => 'id']);
+        return $this->hasMany(Article::className(), ['id' => 'article_id'])
+            ->viaTable('article_tag', ['tag_id' => 'id']);
     }
+
+    /**
+     * Return Tags array
+     * @return array of id=>title
+     */
+    public static function getTagsArray()
+    {
+        $tags=self::find()->all();
+
+        return ArrayHelper::map($tags, 'id', 'title');
+    }
+
+    /**
+     * Delete all tags
+     * @return false|int
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function clear()
+    {
+        return self::delete();
+    }
+
 }

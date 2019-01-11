@@ -2,13 +2,11 @@
 
 namespace app\controllers;
 
-use Yii;
+use app\models\Article;
+use app\models\Category;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
 
 class SiteController extends Controller
 {
@@ -61,68 +59,68 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
-    }
+        $query = Article::find();
 
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
+        $data = Article::getMainSectionData($query);
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
+        $popularPosts = Article::getPopularPosts();
+        $categories = Category::getAll();
 
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
+        return $this->render('index', [
+            'articles' => $data['models'],
+            'pages' => $data['pages'],
+            'popularPosts' => $popularPosts,
+            'categories' => $categories,
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
 
     /**
-     * Displays contact page.
+     * Displays singe article.
      *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
+     * @param int $id id of app\models\Article model
      * @return string
      */
-    public function actionAbout()
+    public function actionView($id)
     {
-        return $this->render('about');
+        $article = Article::findOne($id);
+
+        $popularPosts = Article::getPopularPosts();
+
+        $categories = Category::getAll();
+
+        $tags = $article->getAllTags();
+
+        return $this->render('single-article', [
+            'article' => $article,
+            'popularPosts' => $popularPosts,
+            'categories' => $categories,
+            'tags' => $tags,
+        ]);
+    }
+
+    /**
+     * Displays articles by category.
+     *
+     * @param $id id of app\models\Category model
+     * @return string
+     */
+    public function actionCategory($id)
+    {
+        $query = Article::find()->where(['category_id' => $id]);
+
+        $data = Article::getMainSectionData($query);
+
+        $popularPosts=Article::getPopularPosts();
+
+        $categories=Category::getAll();
+
+        return $this->render('category', [
+            'articles' => $data['models'],
+            'pages' => $data['pages'],
+            'popularPosts'=>$popularPosts,
+            'categories'=>$categories,
+
+        ]);
     }
 }

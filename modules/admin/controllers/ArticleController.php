@@ -2,12 +2,17 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\Category;
+use app\models\imageUploader;
+use app\models\Tag;
 use Yii;
 use app\models\Article;
 use app\models\ArticleSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ArticleController implements the CRUD actions for Article model.
@@ -52,8 +57,11 @@ class ArticleController extends Controller
      */
     public function actionView($id)
     {
+        $model = Article::findOne($id);
+        $tagsString = $model->getTagsString();
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'tags' => $tagsString,
         ]);
     }
 
@@ -66,12 +74,35 @@ class ArticleController extends Controller
     {
         $model = new Article();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $categories = Category::getCategoriesArray();
+        $tags = Tag::getTagsArray();
+
+        $imageUploader = new ImageUploader();
+
+        $request = Yii::$app->request;
+
+        if ($model->load($request->post()) && $model->save()) {
+
+            $imageUploader->imageFile = UploadedFile::getInstance($imageUploader, 'imageFile');
+            $imageUploader->lastImageFile = $model->image;
+
+            $selectedCategory = $request->post('category');
+            $selectedTags = $request->post('tags');
+
+            $model->saveCategory($selectedCategory);
+            $model->saveTags($selectedTags);
+
+            $imageUploader->upload();
+            $model->saveImage($imageUploader->imageFile);
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
+            'imageUploader' => $imageUploader,
+            'categories' => $categories,
+            'tags' => $tags,
         ]);
     }
 
@@ -86,12 +117,41 @@ class ArticleController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $selectedCategory = $model->getSelectedCategoryId();
+        $categories = Category::getCategoriesArray();
+
+        $selectedTags = $model->getSelectedTagsIds();
+        $tags = Tag::getTagsArray();
+
+        $request = Yii::$app->request;
+        $imageUploader = new ImageUploader();
+
+        if ($model->load($request->post()) && $model->save()) {
+
+            $imageUploader->imageFile = UploadedFile::getInstance($imageUploader, 'imageFile');
+            $imageUploader->lastImageFile = $model->image;
+
+            $selectedCategory = $request->post('category');
+            $selectedTags = $request->post('tags');
+
+            $model->saveCategory($selectedCategory);
+
+            $model->saveTags($selectedTags);
+
+            $imageUploader->upload();
+            $model->saveImage($imageUploader->imageFile);
+
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'imageUploader' => $imageUploader,
+            'selectedCategory' => $selectedCategory,
+            'categories' => $categories,
+            'tags' => $tags,
+            'selectedTags' => $selectedTags,
         ]);
     }
 
@@ -101,10 +161,17 @@ class ArticleController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        $imageUploader = new ImageUploader();
+        $imageUploader->deleteImage($model->image);
+
+        $model->delete();
 
         return $this->redirect(['index']);
     }
