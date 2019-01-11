@@ -28,6 +28,17 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Return User model from db
+     *
+     * @param $username
+     * @return array|null|\yii\db\ActiveRecord
+     */
+    public static function findByUsername($username)
+    {
+        return self::find()->where(['name'=>$username])->one();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function rules()
