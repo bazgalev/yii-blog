@@ -35,7 +35,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return self::find()->where(['name'=>$username])->one();
+        return self::find()->where(['name' => $username])->one();
     }
 
     /**
@@ -135,5 +135,16 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function validateAuthKey($authKey)
     {
         // TODO: Implement validateAuthKey() method.
+    }
+
+    /**
+     * Validate user password
+     *
+     * @param $password
+     * @return bool
+     */
+    public function validatePassword($password)
+    {
+        return ($this->password == $password) ? true : false;
     }
 }
