@@ -17,11 +17,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
                 <span class="border border-primary"></span>
-                <form method="post" action="/auth/login"
+                <form method="post"
                       style="box-sizing:border-box;border:1px solid #333333;padding:30px;margin-bottom: 50px;border-radius: 15px;">
                     <div class="form-group">
                         <label for="exampleInputName">User name</label>
-                        <input type="text" class="form-control" id="exampleInputName" name="username"
+                        <input type="text" class="form-control" id="exampleInputName" name="name"
                                placeholder="Enter username">
 
                     </div>
