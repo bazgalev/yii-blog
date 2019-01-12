@@ -47,8 +47,11 @@ PublicAsset::register($this);
                 <ul class="nav navbar-nav text-uppercase">
                     <li class="nav-item"><a href="/">Home</a></li>
 
-
-                    <li class="nav-item"><a href="/auth/login">Login</a></li>
+                    <?php if (Yii::$app->user->isGuest): ?>
+                        <li class="nav-item"><a href="/auth/login">Login</a></li>
+                    <?php else: ?>
+                        <li class="nav-item"><a href="/auth/logout">Logout</a></li>
+                    <?php endif; ?>
                     <li class="nav-item"><a href="/auth/register">Register</a></li>
                 </ul>
 
