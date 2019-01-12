@@ -32,12 +32,22 @@ class AuthController extends Controller
             return $this->goHome();
         }
 
+        $request = Yii::$app->request;
+
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+
+        if ($request->post()) {
+
+            $model->name = $request->post('name');
+            $model->password = $request->post('password');
+
+            if ($model->login()) {
+                
+                return $this->goBack();
+            }
         }
 
-        $model->password = '';
+
         return $this->render('login', [
             'model' => $model,
         ]);
@@ -57,13 +67,13 @@ class AuthController extends Controller
 
     public function actionTest()
     {
-        $user=User::findOne(1);
+        $user = User::findOne(1);
 
         Yii::$app->user->login($user);
 
-        if(Yii::$app->user->isGuest){
+        if (Yii::$app->user->isGuest) {
             echo 'Ты гость';
-        }else{
+        } else {
             echo 'Ты пользователь';
         }
     }
