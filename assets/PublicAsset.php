@@ -21,6 +21,8 @@ class PublicAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         "public/css/style.css",
+        "public/css/spacing.css",
+        "public/css/custom.css",
         "public/css/bootstrap.min.css",
         "public/css/font-awesome.min.css",
         "public/css/animate.min.css",

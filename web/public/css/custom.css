@@ -1,0 +1,6 @@
+.bordered-form{
+    box-sizing: border-box; !important;
+    padding: 40px;
+    border: 1px solid #2b669a;
+    border-radius: 5px;
+}

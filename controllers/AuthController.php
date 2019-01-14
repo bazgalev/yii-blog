@@ -36,13 +36,12 @@ class AuthController extends Controller
 
         $model = new LoginForm();
 
-        if ($request->post()) {
+        if ($model->load($request->post())) {
 
-            $model->name = $request->post('name');
-            $model->password = $request->post('password');
+//            vd($model);
 
             if ($model->login()) {
-                
+
                 return $this->goBack();
             }
         }
