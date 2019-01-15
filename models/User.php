@@ -33,9 +33,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      * @param $username
      * @return array|null|\yii\db\ActiveRecord
      */
-    public static function findByUsername($username)
+    public static function findByEmail($email)
     {
-        return self::find()->where(['name' => $username])->one();
+        return self::find()->where(['email' => $email])->one();
     }
 
     /**

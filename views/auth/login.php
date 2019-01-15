@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <?php $form = ActiveForm::begin(); ?>
 
-                    <?= $form->field($model, 'name'); ?>
+                    <?= $form->field($model, 'email'); ?>
 
                     <?= $form->field($model, 'password')->passwordInput(); ?>
 
