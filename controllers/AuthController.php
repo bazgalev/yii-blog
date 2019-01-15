@@ -81,4 +81,21 @@ class AuthController extends Controller
             'model' => $model,
         ]);
     }
+
+    public function actionLoginVk()
+    {
+        $request = Yii::$app->request;
+
+        $uid = $request->get('uid');
+        $firstName = $request->get('first_name');
+        $photo = $request->get('photo');
+
+        $user = new User();
+
+        if ($user->saveFromVk($uid, $firstName, $photo)) {
+            return $this->redirect(['site/index']);
+        }
+
+        return $this->render('login');
+    }
 }
