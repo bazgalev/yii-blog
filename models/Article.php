@@ -33,12 +33,12 @@ class Article extends \yii\db\ActiveRecord
         return 'article';
     }
 
-    public static function getPopularPosts($limit=3)
+    public static function getPopularPosts($limit = 3)
     {
         return self::find()->orderBy('viewed desc')->limit($limit)->all();
     }
 
-    public static function getRecentPosts($limit=4)
+    public static function getRecentPosts($limit = 4)
     {
         return self::find()->orderBy('date desc')->limit($limit)->all();
     }
@@ -164,12 +164,14 @@ class Article extends \yii\db\ActiveRecord
         $tags = $this->getSelectedTagsIds();
         $string = '';
 
-        foreach ($tags as $tag) {
+        if ($tags) {
+            foreach ($tags as $tag) {
 
-            $string .= $tag;
+                $string .= $tag;
 
-            if ($tag != end($tags)) {
-                $string .= ', ';
+                if ($tag != end($tags)) {
+                    $string .= ', ';
+                }
             }
         }
 
@@ -219,7 +221,7 @@ class Article extends \yii\db\ActiveRecord
         return Yii::$app->formatter->asDate($this->date, 'long');
     }
 
-    public static function getMainSectionData(ActiveQuery $query,$pageSize=5)
+    public static function getMainSectionData(ActiveQuery $query, $pageSize = 5)
     {
         $count = $query->count();
 
