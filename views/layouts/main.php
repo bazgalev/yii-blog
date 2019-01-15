@@ -55,7 +55,7 @@ PublicAsset::register($this);
                             </a>
                         </li>
                     <?php endif; ?>
-                    <li class="nav-item"><a href="/auth/register">Register</a></li>
+                    <li class="nav-item"><a href="/auth/signup">Sign up</a></li>
                 </ul>
 
 

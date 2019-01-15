@@ -11,6 +11,7 @@ namespace app\controllers;
 
 use app\models\Article;
 use app\models\Category;
+use app\models\SignupForm;
 use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
@@ -36,9 +37,7 @@ class AuthController extends Controller
 
         $model = new LoginForm();
 
-        if ($model->load($request->post())) {
-
-//            vd($model);
+        if ($model->load($request->post()) && $request->isPost) {
 
             if ($model->login()) {
 
@@ -64,16 +63,22 @@ class AuthController extends Controller
         return $this->goHome();
     }
 
-    public function actionTest()
+    public function actionSignup()
     {
-        $user = User::findOne(1);
+        $model = new SignupForm();
 
-        Yii::$app->user->login($user);
+        $request = Yii::$app->request;
 
-        if (Yii::$app->user->isGuest) {
-            echo 'Ты гость';
-        } else {
-            echo 'Ты пользователь';
+        if ($request->isPost) {
+            $model->load($request->post());
+
+            if ($model->signup()) {
+                return $this->redirect(['auth/login']);
+            }
         }
+
+        return $this->render('sign-up', [
+            'model' => $model,
+        ]);
     }
 }
