@@ -19,6 +19,7 @@ use yii\helpers\ArrayHelper;
  * @property int $viewed
  * @property int $status
  * @property int $category_id
+ * @property int $author_id
  *
  * @property ArticleTag[] $articleTags
  * @property Comment[] $comments
@@ -69,6 +70,7 @@ class Article extends \yii\db\ActiveRecord
             'date' => 'Date',
             'image' => 'Image',
             'viewed' => 'Viewed',
+            'author_id' => 'Author ID',
             'status' => 'Status',
             'category_id' => 'Category ID',
         ];
@@ -221,6 +223,13 @@ class Article extends \yii\db\ActiveRecord
         return Yii::$app->formatter->asDate($this->date, 'long');
     }
 
+    /**
+     * Get data for main section
+     *
+     * @param ActiveQuery $query
+     * @param int $pageSize
+     * @return array
+     */
     public static function getMainSectionData(ActiveQuery $query, $pageSize = 5)
     {
         $count = $query->count();
@@ -241,9 +250,23 @@ class Article extends \yii\db\ActiveRecord
         );
     }
 
+    /**
+     * Get array of all Tag models
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
     public function getAllTags()
     {
         return $this->getTags()->all();
+    }
+
+    /**
+     * Save article into db
+     */
+    public function saveArticle()
+    {
+        $this->author_id = Yii::$app->user->id;
+        return $this->save();
     }
 
 

@@ -81,7 +81,7 @@ class ArticleController extends Controller
 
         $request = Yii::$app->request;
 
-        if ($model->load($request->post()) && $model->save()) {
+        if ($model->load($request->post()) && $model->saveArticle()) {
 
             $imageUploader->imageFile = UploadedFile::getInstance($imageUploader, 'imageFile');
             $imageUploader->lastImageFile = $model->image;

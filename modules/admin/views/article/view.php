@@ -45,6 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ],
             'viewed',
+            'author_id',
             'status',
             'category_id',
             [
