@@ -59,6 +59,7 @@ class ArticleController extends Controller
     {
         $model = Article::findOne($id);
         $tagsString = $model->getTagsString();
+
         return $this->render('view', [
             'model' => $this->findModel($id),
             'tags' => $tagsString,

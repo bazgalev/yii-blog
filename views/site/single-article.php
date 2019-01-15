@@ -5,7 +5,10 @@ use yii\helpers\Url;
 /* @var $article app\models\Article */
 /* @var $tags array of app\models\Tag models */
 /* @var $categories array of app\models\Category models */
+/* @var $comments array of app\models\Comment models */
 /* @var $this yii\web\View */
+/* @var $commentForm app\models\CommentForm */
+
 
 $this->title = $article->title;
 ?>
@@ -65,45 +68,57 @@ $this->title = $article->title;
                         </div>
                     </div>
                 </article>
-                <div class="bottom-comment"><!--bottom comment-->
-                    <h4>3 comments</h4>
-
-                    <div class="comment-img">
-                        <img class="img-circle" src="/public/images/comment-img.jpg" alt="">
-                    </div>
-
-                    <div class="comment-text">
-                        <a href="#" class="replay btn pull-right"> Replay</a>
-                        <h5>Rubel Miah</h5>
-
-                        <p class="comment-date">
-                            December, 02, 2015 at 5:57 PM
-                        </p>
 
 
-                        <p class="para">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                            diam nonumy
-                            eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-                            voluptua. At vero eos et cusam et justo duo dolores et ea rebum.</p>
-                    </div>
-                </div>
-                <!-- end bottom comment-->
+                <?php if (!empty($comments)): ?>
+                    <?php foreach ($comments as $comment): ?>
+                        <div class="bottom-comment"><!--bottom comment-->
+                            <!--                            <h4>3 comments</h4>-->
 
+                            <div class="comment-img">
+                                <img class="img-circle" width="80" src="<?= $comment->user->photo; ?>" alt="/uploads/default.jpg">
+                            </div>
+
+                            <div class="comment-text">
+                                <a href="#" class="replay btn pull-right"> Replay</a>
+                                <h5><?= $comment->user->name; ?></h5>
+
+                                <p class="comment-date">
+                                    <?= $comment->getDate(); ?>
+                                </p>
+
+
+                                <p class="para">
+                                    <?= $comment->text; ?>.
+                                </p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
                 <div class="leave-comment"><!--leave comment-->
                     <h4>Leave a reply</h4>
 
+                    <?php $form = \yii\widgets\ActiveForm::begin([
+                        'action' => ['site/comment', 'id' => $article->id],
+                        'options' => ['class' => 'form-horizontal contact-form', 'role' => 'form']]) ?>
 
-                    <form class="form-horizontal contact-form" role="form" method="post" action="#">
-                        <div class="form-group">
-                            <div class="col-md-12">
-										<textarea class="form-control" rows="6" name="message"
-                                                  placeholder="Write Massage"></textarea>
-                            </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <?= $form->field($commentForm, 'commentText')
+                                ->textarea([
+                                    'class' => 'form-control',
+                                    'placeholder' => 'Write Message',
+                                    'rows'=>'6'])
+                                ->label(false) ?>
                         </div>
-                        <a href="#" class="btn send-btn">Post Comment</a>
-                    </form>
-                </div><!--end leave comment-->
+                    </div>
+                    <button type="submit" class="btn send-btn">Post Comment</button>
+
+                    <?php \yii\widgets\ActiveForm::end(); ?>
+
+                </div>
+
             </div>
 
             <!--Start of sidebar-->

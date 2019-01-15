@@ -4,7 +4,10 @@ namespace app\controllers;
 
 use app\models\Article;
 use app\models\Category;
+use app\models\CommentForm;
+use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 
@@ -91,11 +94,17 @@ class SiteController extends Controller
 
         $tags = $article->getAllTags();
 
+        $comments = $article->comments;
+
+        $model = new CommentForm();
+
         return $this->render('single-article', [
             'article' => $article,
             'popularPosts' => $popularPosts,
             'categories' => $categories,
             'tags' => $tags,
+            'commentForm' => $model,
+            'comments' => $comments,
         ]);
     }
 
@@ -111,16 +120,31 @@ class SiteController extends Controller
 
         $data = Article::getMainSectionData($query);
 
-        $popularPosts=Article::getPopularPosts();
+        $popularPosts = Article::getPopularPosts();
 
-        $categories=Category::getAll();
+        $categories = Category::getAll();
 
         return $this->render('category', [
             'articles' => $data['models'],
             'pages' => $data['pages'],
-            'popularPosts'=>$popularPosts,
-            'categories'=>$categories,
+            'popularPosts' => $popularPosts,
+            'categories' => $categories,
 
         ]);
+    }
+
+    public function actionComment($id)
+    {
+        $model = new CommentForm();
+
+        $request = Yii::$app->request;
+
+        if ($request->isPost && $model->load($request->post())) {
+
+            if ($model->saveComment($id)) {
+                return $this->redirect(Url::toRoute(['site/view', 'id' => $id]));
+            }
+        }
+
     }
 }

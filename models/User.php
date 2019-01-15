@@ -175,4 +175,5 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
         return Yii::$app->user->login($user);
     }
+
 }
