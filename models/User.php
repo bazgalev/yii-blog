@@ -30,7 +30,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     /**
      * Return User model from db
      *
-     * @param $username
+     * @param $email
      * @return array|null|\yii\db\ActiveRecord
      */
     public static function findByEmail($email)
