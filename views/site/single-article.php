@@ -5,10 +5,9 @@ use yii\helpers\Url;
 /* @var $article app\models\Article */
 /* @var $tags array of app\models\Tag models */
 /* @var $categories array of app\models\Category models */
-/* @var $comments array of app\models\Comment models */
 /* @var $this yii\web\View */
+/* @var $comments array of app\models\Comment models */
 /* @var $commentForm app\models\CommentForm */
-
 
 $this->title = $article->title;
 ?>
@@ -69,66 +68,23 @@ $this->title = $article->title;
                     </div>
                 </article>
 
+                <!--            start of comment section-->
 
-                <?php if (!empty($comments)): ?>
-                    <?php foreach ($comments as $comment): ?>
-                        <div class="bottom-comment"><!--bottom comment-->
-                            <!--                            <h4>3 comments</h4>-->
+                <?= $this->render('/partials/comment', [
+                    'comments' => $comments,
+                    'commentForm' => $commentForm,
+                    'article' => $article,
+                ]) ?>
+                <!--            end of comment section-->
 
-                            <div class="comment-img">
-                                <img class="img-circle" width="80" src="<?= $comment->user->photo; ?>" alt="/uploads/default.jpg">
-                            </div>
-
-                            <div class="comment-text">
-                                <a href="#" class="replay btn pull-right"> Replay</a>
-                                <h5><?= $comment->user->name; ?></h5>
-
-                                <p class="comment-date">
-                                    <?= $comment->getDate(); ?>
-                                </p>
-
-
-                                <p class="para">
-                                    <?= $comment->text; ?>.
-                                </p>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-
-                <div class="leave-comment"><!--leave comment-->
-                    <h4>Leave a reply</h4>
-
-                    <?php $form = \yii\widgets\ActiveForm::begin([
-                        'action' => ['site/comment', 'id' => $article->id],
-                        'options' => ['class' => 'form-horizontal contact-form', 'role' => 'form']]) ?>
-
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <?= $form->field($commentForm, 'commentText')
-                                ->textarea([
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Write Message',
-                                    'rows'=>'6'])
-                                ->label(false) ?>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn send-btn">Post Comment</button>
-
-                    <?php \yii\widgets\ActiveForm::end(); ?>
-
-                </div>
+                <!--Start of sidebar-->
+                <?= $this->render('/partials/sidebar', [
+                    'popularPosts' => $popularPosts,
+                    'categories' => $categories,
+                ]) ?>
+                <!--End of sidebar-->
 
             </div>
-
-            <!--Start of sidebar-->
-            <?= $this->render('/partials/sidebar', [
-                'popularPosts' => $popularPosts,
-                'categories' => $categories,
-            ]) ?>
-            <!--End of sidebar-->
-
         </div>
     </div>
-</div>
-<!-- end main content-->
+    <!-- end main content-->

@@ -94,7 +94,7 @@ class SiteController extends Controller
 
         $tags = $article->getAllTags();
 
-        $comments = $article->comments;
+        $comments = $article->getArticleComments();
 
         $model = new CommentForm();
 
@@ -142,6 +142,8 @@ class SiteController extends Controller
         if ($request->isPost && $model->load($request->post())) {
 
             if ($model->saveComment($id)) {
+
+                Yii::$app->getSession()->setFlash('comment', 'Comment added!');
                 return $this->redirect(Url::toRoute(['site/view', 'id' => $id]));
             }
         }

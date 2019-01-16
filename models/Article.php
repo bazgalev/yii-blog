@@ -268,4 +268,10 @@ class Article extends \yii\db\ActiveRecord
         $this->author_id = Yii::$app->user->id;
         return $this->save();
     }
+
+    public function getArticleComments()
+    {
+        return $this->comments;
+    }
+
 }
