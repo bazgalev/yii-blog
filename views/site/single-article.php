@@ -55,7 +55,7 @@ $this->title = $article->title;
                         <div class="social-share">
 
                             <span class="social-share-title pull-left text-capitalize">
-                                By Pazgalev On <?= $article->getDate(); ?>
+                                By <?= $article->user->name; ?> On <?= $article->getDate(); ?>
                             </span>
 
                             <ul class="text-center pull-right">

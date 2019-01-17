@@ -230,7 +230,7 @@ class Article extends \yii\db\ActiveRecord
      * @param int $pageSize
      * @return array
      */
-    public static function getMainSectionData(ActiveQuery $query, $pageSize = 5)
+    public static function getMainSectionData(ActiveQuery $query, $pageSize = 3)
     {
         $count = $query->count();
 
@@ -272,6 +272,18 @@ class Article extends \yii\db\ActiveRecord
     public function getArticleComments()
     {
         return $this->comments;
+    }
+
+    public function updateCounter()
+    {
+        $this->viewed+=1;
+
+        return $this->save();
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::className(),['id'=>'author_id']);
     }
 
 }

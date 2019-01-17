@@ -61,7 +61,7 @@ $this->title = 'Main page'
 
                             <div class="social-share">
                                 <span class="social-share-title pull-left text-capitalize">By
-                                    <a href="#">Pazgalev</a> On <?= $article->getDate(); ?>
+                                    <a href="#"><?= $article->user->name ?></a> On <?= $article->getDate(); ?>
                                 </span>
                                 <ul class="text-center pull-right">
                                     <li><a class="s-facebook" href="#"><i class="fa fa-eye"></i></a></li>

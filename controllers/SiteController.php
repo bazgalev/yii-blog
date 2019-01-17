@@ -88,6 +88,8 @@ class SiteController extends Controller
     {
         $article = Article::findOne($id);
 
+        $article->updateCounter();
+
         $popularPosts = Article::getPopularPosts();
 
         $categories = Category::getAll();
@@ -133,6 +135,12 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * Comment action
+     *
+     * @param $id
+     * @return \yii\web\Response
+     */
     public function actionComment($id)
     {
         $model = new CommentForm();
