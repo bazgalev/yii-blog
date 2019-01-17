@@ -1,6 +1,7 @@
 <?php
 
 /* @var $this \yii\web\View */
+
 /* @var $content string */
 
 use app\widgets\Alert;
@@ -44,7 +45,7 @@ AppAsset::register($this);
             ['label' => 'Tag', 'url' => ['/admin/tag']],
             ['label' => 'Category', 'url' => ['/admin/category']],
             Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
+            ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
@@ -78,6 +79,14 @@ AppAsset::register($this);
 </footer>
 
 <?php $this->endBody() ?>
+<?php $this->registerJsFile('/ckeditor/ckeditor.js') ?>
+<?php $this->registerJsFile('/ckfinder/ckfinder.js') ?>
+<script>
+    $(document).ready(function () {
+        var editor = CKEDITOR.replaceAll();
+        CKFinder.setupCKEditor(editor);
+    });
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>
