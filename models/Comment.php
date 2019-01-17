@@ -27,6 +27,21 @@ class Comment extends \yii\db\ActiveRecord
     }
 
     /**
+     * Get all Comment models from database
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function getAll()
+    {
+        return self::find()->all();
+    }
+
+    public static function getAllOrderByDate($orderBy='SORT_DESC')
+    {
+        return self::find()->orderBy(['date'=>SORT_DESC])->all();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function rules()
@@ -73,4 +88,5 @@ class Comment extends \yii\db\ActiveRecord
     {
         return Yii::$app->formatter->asDate($this->date, 'long');
     }
+
 }
