@@ -40,6 +40,7 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Home', 'url' => ['/admin/default']],
             ['label' => 'Article', 'url' => ['/admin/article']],
+            ['label' => 'Comments', 'url' => ['/admin/comment']],
             ['label' => 'Tag', 'url' => ['/admin/tag']],
             ['label' => 'Category', 'url' => ['/admin/category']],
             Yii::$app->user->isGuest ? (
