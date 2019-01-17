@@ -42,28 +42,27 @@ PublicAsset::register($this);
                 <a class="navbar-brand" href="/"><img src="\public\images\logo-pazgalev-black.png" alt="Logo"></a>
             </div>
 
-
             <div class="collapse navbar-collapse ml-auto" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav text-uppercase">
                     <li class="nav-item"><a href="/">Home</a></li>
-
+                </ul>
+                <ul class="nav navbar-nav text-uppercase navbar-right">
                     <?php if (Yii::$app->user->isGuest): ?>
                         <li class="nav-item"><a href="/auth/login">Login</a></li>
                         <li class="nav-item"><a href="/auth/signup">Sign up</a></li>
                     <?php else: ?>
                         <li class="nav-item">
-                            <a href="/auth/logout">Logout(<?= Yii::$app->user->identity->name; ?>)
+                            <a href="/auth/logout">
+                                Logout(<?= Yii::$app->user->identity->name; ?>)
                             </a>
                         </li>
                     <?php endif; ?>
-
                 </ul>
-
-
             </div>
         </div>
         <!-- /.container-fluid -->
 </nav>
+
 
 <?= $content; ?>
 
