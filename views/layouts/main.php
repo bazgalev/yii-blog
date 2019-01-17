@@ -49,13 +49,14 @@ PublicAsset::register($this);
 
                     <?php if (Yii::$app->user->isGuest): ?>
                         <li class="nav-item"><a href="/auth/login">Login</a></li>
+                        <li class="nav-item"><a href="/auth/signup">Sign up</a></li>
                     <?php else: ?>
                         <li class="nav-item">
                             <a href="/auth/logout">Logout(<?= Yii::$app->user->identity->name; ?>)
                             </a>
                         </li>
                     <?php endif; ?>
-                    <li class="nav-item"><a href="/auth/signup">Sign up</a></li>
+
                 </ul>
 
 
