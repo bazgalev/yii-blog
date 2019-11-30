@@ -148,16 +148,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return ($this->password == $password) ? true : false;
     }
 
-    /**
-     * Save new User into db
-     *
-     * @return bool return true on success or false on failure
-     */
-    public function create()
-    {
-        return $this->save(false);
-    }
-
     public function saveFromVk(int $uid, string $firstName, string $photo)
     {
         $user = User::findOne($uid);
@@ -170,10 +160,16 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             $user->name = $firstName;
             $user->photo = $photo;
 
-            $user->create();
+            $this->save();
         }
 
         return Yii::$app->user->login($user);
     }
 
+    public function getAvatarUrl(): string
+    {
+        return !is_null($this->photo) ?
+            $this->photo :
+            '/uploads/default.jpg';
+    }
 }

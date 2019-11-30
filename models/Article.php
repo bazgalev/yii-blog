@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
@@ -23,6 +24,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property ArticleTag[] $articleTags
  * @property Comment[] $comments
+ * @property Tag[] $tags
  */
 class Article extends \yii\db\ActiveRecord
 {
@@ -34,15 +36,24 @@ class Article extends \yii\db\ActiveRecord
         return 'article';
     }
 
-    public static function getPopularPosts($limit = 3)
+    /**
+     * @param int $limit
+     * @return Article[]
+     */
+    public static function getPopularPosts($limit = 3): array
     {
         return self::find()->orderBy('viewed desc')->limit($limit)->all();
     }
 
+    /**
+     * @param int $limit
+     * @return Article[]
+     */
     public static function getRecentPosts($limit = 4)
     {
         return self::find()->orderBy('date desc')->limit($limit)->all();
     }
+
 
     /**
      * {@inheritdoc}
@@ -81,7 +92,7 @@ class Article extends \yii\db\ActiveRecord
      */
     public function getArticleTags()
     {
-        return $this->hasMany(ArticleTag::className(), ['article_id' => 'id']);
+        return $this->hasMany(ArticleTag::class, ['article_id' => 'id']);
     }
 
     /**
@@ -89,7 +100,7 @@ class Article extends \yii\db\ActiveRecord
      */
     public function getComments()
     {
-        return $this->hasMany(Comment::className(), ['article_id' => 'id']);
+        return $this->hasMany(Comment::class, ['article_id' => 'id']);
     }
 
     /**
@@ -106,13 +117,11 @@ class Article extends \yii\db\ActiveRecord
     /**
      * @return string path to image file
      */
-    public function getImage()
+    public function getImage(): string
     {
-        if ($this->image) {
-            return '/uploads/' . $this->image;
-        } else {
-            return '/uploads/default.jpg';
-        }
+        return !is_null($this->image) ?
+            '/uploads/' . $this->image :
+            '/uploads/default.jpg';
     }
 
     /**
@@ -120,15 +129,14 @@ class Article extends \yii\db\ActiveRecord
      */
     public function getCategory()
     {
-        return $this->hasOne(Category::className(), ['id' => 'category_id']);
+        return $this->hasOne(Category::class, ['id' => 'category_id']);
     }
 
     /**
      * Save category id of Article model
-     * @param $category_id
-     * @return bool
+     * @param int $category_id
      */
-    public function saveCategory($category_id)
+    public function saveCategory(int $category_id): void
     {
         $category = Category::findOne($category_id);
 
@@ -186,7 +194,7 @@ class Article extends \yii\db\ActiveRecord
      */
     public function getTags()
     {
-        return $this->hasMany(Tag::className(), ['id' => 'tag_id'])
+        return $this->hasMany(Tag::class, ['id' => 'tag_id'])
             ->viaTable('article_tag', ['article_id' => 'id']);
     }
 
@@ -224,43 +232,6 @@ class Article extends \yii\db\ActiveRecord
     }
 
     /**
-     * Get data for main section
-     *
-     * @param ActiveQuery $query
-     * @param int $pageSize
-     * @return array
-     */
-    public static function getMainSectionData(ActiveQuery $query, $pageSize = 3)
-    {
-        $count = $query->count();
-
-        $pages = new Pagination([
-            'totalCount' => $count,
-            'pageSize' => $pageSize,
-        ]);
-
-        $models = $query->offset($pages->offset)
-            ->limit($pages->limit)
-            ->orderBy('date desc')
-            ->all();
-
-        return array(
-            'models' => $models,
-            'pages' => $pages,
-        );
-    }
-
-    /**
-     * Get array of all Tag models
-     *
-     * @return array|\yii\db\ActiveRecord[]
-     */
-    public function getAllTags()
-    {
-        return $this->getTags()->all();
-    }
-
-    /**
      * Save article into db
      */
     public function saveArticle()
@@ -269,21 +240,39 @@ class Article extends \yii\db\ActiveRecord
         return $this->save();
     }
 
-    public function getArticleComments()
-    {
-        return $this->comments;
-    }
-
     public function updateCounter()
     {
-        $this->viewed+=1;
+        $this->viewed += 1;
 
         return $this->save();
     }
 
     public function getUser()
     {
-        return $this->hasOne(User::className(),['id'=>'author_id']);
+        return $this->hasOne(User::class, ['id' => 'author_id']);
+    }
+
+    public static function getDataProvider(int $pageSize = 5): ActiveDataProvider
+    {
+        return new ActiveDataProvider([
+            'query' => Article::find(),
+            'pagination' => [
+                'pageSize' => $pageSize
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'date' => SORT_DESC,
+                ]
+            ],
+        ]);
+    }
+
+    public static function getCategoryDataProvider(int $categoryId, int $pageSize = 5): ActiveDataProvider
+    {
+        $dp = self::getDataProvider($pageSize);
+        $dp->query = Article::find()->where(['category_id' => $categoryId]);
+
+        return $dp;
     }
 
 }

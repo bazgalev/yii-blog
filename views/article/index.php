@@ -3,11 +3,11 @@
 use yii\widgets\LinkPager;
 use yii\helpers\Url;
 
-/* @var $articles array of Article models */
-/* @var $article app\models\Article */
+/* @var $dataProvider \yii\data\ActiveDataProvider */
 /* @var $popularPosts app\models\Article */
 /* @var $category app\models\Category */
 /* @var $this yii\web\View */
+/* @var $article \app\models\Article */
 
 $this->title = 'Main page'
 ?>
@@ -18,14 +18,14 @@ $this->title = 'Main page'
         <div class="row">
             <div class="col-md-8">
 
-                <?php foreach ($articles as $article): ?>
+                <?php foreach ($dataProvider->getModels() as $article): ?>
                     <article class="post">
 
                         <div class="post-thumb">
-                            <a href="<?= Url::toRoute(['site/view', 'id' => $article->id]) ?>">
+                            <a href="<?= Url::toRoute(['post/view', 'id' => $article->id]) ?>">
                                 <img src="<?= $article->getImage(); ?>" alt="">
                             </a>
-                            <a href="<?= Url::toRoute(['site/view', 'id' => $article->id]) ?>"
+                            <a href="<?= Url::toRoute(['post/view', 'id' => $article->id]) ?>"
                                class="post-thumb-overlay text-center">
                                 <div class="text-uppercase text-center">View Post</div>
                             </a>
@@ -40,7 +40,7 @@ $this->title = 'Main page'
                                     </a>
                                 </h6>
                                 <h1 class="entry-title">
-                                    <a href="<?= Url::toRoute(['site/view', 'id' => $article->id]) ?>">
+                                    <a href="<?= Url::toRoute(['post/view', 'id' => $article->id]) ?>">
                                         <?= $article->title; ?>
                                     </a>
                                 </h1>
@@ -52,7 +52,7 @@ $this->title = 'Main page'
                                 </p>
 
                                 <div class="btn-continue-reading text-center text-uppercase">
-                                    <a href="<?= Url::toRoute(['site/view', 'id' => $article->id]) ?>"
+                                    <a href="<?= Url::toRoute(['post/view', 'id' => $article->id]) ?>"
                                        class="more-link">
                                         Continue Reading
                                     </a>
@@ -74,7 +74,7 @@ $this->title = 'Main page'
                     </article>
                 <?php endforeach; ?>
 
-                <?= LinkPager::widget(['pagination' => $pages, 'maxButtonCount' => 5]); ?>
+                <?= LinkPager::widget(['pagination' => $dataProvider->getPagination(), 'maxButtonCount' => 5]); ?>
             </div>
 
             <!--Start of sidebar-->

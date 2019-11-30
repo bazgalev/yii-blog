@@ -6,8 +6,9 @@
  * Time: 0:43
  */
 
-namespace app\models;
+namespace app\forms;
 
+use app\models\User;
 use yii\base\Model;
 
 class SignupForm extends Model
@@ -52,7 +53,7 @@ class SignupForm extends Model
 
             $user->attributes = $this->attributes;
 
-            return $user->create();
+            return $user->save();
         } else {
             return false;
         }

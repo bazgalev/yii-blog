@@ -1,12 +1,13 @@
 <?php
 
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $article app\models\Article */
 /* @var $categories array of app\models\Category models */
-/* @var $comments array of app\models\Comment models */
-/* @var $commentForm app\models\CommentForm */
+/* @var  \app\models\Comment[] $comments */
+/* @var $commentForm \app\forms\CommentForm */
 
 ?>
 
@@ -16,7 +17,8 @@ use yii\widgets\ActiveForm;
             <!--                            <h4>3 comments</h4>-->
 
             <div class="comment-img">
-                <img class="img-circle" width="80" src="<?= $comment->user->photo; ?>" alt="/uploads/default.jpg">
+                <img class="img-circle" width="80" src="<?= $comment->user->getAvatarUrl() ?>"
+                     alt="<?= $comment->user->name ?>">
             </div>
 
             <div class="comment-text">
@@ -47,7 +49,7 @@ use yii\widgets\ActiveForm;
         <?php endif; ?>
 
         <?php $form = ActiveForm::begin([
-            'action' => ['site/comment', 'id' => $article->id],
+            'action' => Url::toRoute(['comment/create', 'postId' => $article->id]),
             'options' => ['class' => 'form-horizontal contact-form', 'role' => 'form']]) ?>
 
         <div class="form-group">

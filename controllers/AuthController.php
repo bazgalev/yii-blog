@@ -11,14 +11,14 @@ namespace app\controllers;
 
 use app\models\Article;
 use app\models\Category;
-use app\models\SignupForm;
+use app\forms\SignupForm;
 use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
+use app\forms\LoginForm;
 
 class AuthController extends Controller
 {
