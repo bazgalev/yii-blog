@@ -13,6 +13,21 @@ use yii\base\Model;
 
 class LoginVkForm extends Model
 {
+    /**
+     * @var string
+     */
+    public $uid;
+
+    /**
+     * @var string
+     */
+    public $first_name;
+
+    /**
+     * @var string
+     */
+    public $photo;
+
     public function rules()
     {
         return [
