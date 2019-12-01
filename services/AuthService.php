@@ -11,7 +11,6 @@ namespace app\services;
 use app\forms\LoginForm;
 use app\forms\SignupForm;
 use app\models\User;
-use DomainException;
 
 
 class AuthService
@@ -35,7 +34,7 @@ class AuthService
     {
         $user = User::findByEmail($form->email);
         if (is_null($user) || !$user->validatePassword($form->password)) {
-            throw new DomainException('Email or password incorrect');
+            throw new \DomainException('Email or password incorrect');
         }
         return $user;
     }
