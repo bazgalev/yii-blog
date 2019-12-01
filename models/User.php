@@ -33,9 +33,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      * @param $email
      * @return array|null|\yii\db\ActiveRecord
      */
-    public static function findByEmail($email)
+    public static function findByEmail(string $email): ?User
     {
-        return self::find()->where(['email' => $email])->one();
+        return self::findOne(['email' => $email]);
     }
 
     /**
@@ -45,7 +45,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             [['isAdmin'], 'integer'],
-            [['name', 'email', 'password', 'photo'], 'string', 'max' => 255],
+            ['email', 'email'],
+            [['name', 'password', 'photo'], 'string', 'max' => 255],
         ];
     }
 
@@ -69,7 +70,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getComments()
     {
-        return $this->hasMany(Comment::className(), ['user_id' => 'id']);
+        return $this->hasMany(Comment::class, ['user_id' => 'id']);
     }
 
     /**
@@ -95,7 +96,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        // TODO: Implement findIdentityByAccessToken() method.
+        throw new \Exception('Method not supported');
     }
 
     /**
@@ -121,7 +122,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getAuthKey()
     {
-        // TODO: Implement getAuthKey() method.
     }
 
     /**
@@ -134,7 +134,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-        // TODO: Implement validateAuthKey() method.
+        throw new \Exception('Method not supported');
     }
 
     /**
@@ -143,9 +143,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      * @param $password
      * @return bool
      */
-    public function validatePassword($password)
+    public function validatePassword(string $password): bool
     {
-        return ($this->password == $password) ? true : false;
+        return $this->password === $password;
     }
 
     public function saveFromVk(int $uid, string $firstName, string $photo)
@@ -171,5 +171,18 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return !is_null($this->photo) ?
             $this->photo :
             '/uploads/default.jpg';
+    }
+
+    public static function create(
+        string $name, string $email, string $password, ?string $photo = null, int $isAdmin = 0): self
+    {
+        $user = new User();
+        $user->name = $name;
+        $user->email = $email;
+        $user->password = $password;
+        $user->photo = $photo;
+        $user->isAdmin = $isAdmin;
+
+        return $user;
     }
 }
