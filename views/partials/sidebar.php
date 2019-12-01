@@ -2,7 +2,13 @@
 
 /* @var $this yii\web\View */
 /* @var $article app\models\Article */
-/* @var $category app\models\Category */
+
+/** @var \app\models\Category[] $categories */
+
+/** @var \app\models\Article[] $popularPosts */
+
+use yii\helpers\Url;
+
 ?>
 
 <div class="col-md-4" data-sticky_column>
@@ -13,13 +19,14 @@
 
             <?php foreach ($popularPosts as $article): ?>
                 <div class="popular-post">
-                    <a href="/site/view?id=<?= $article->id; ?>" class="popular-img">
+                    <a href="<?= Url::toRoute(['article/view', 'id' => $article->id]) ?>" class="popular-img">
                         <img src="<?= $article->getImage(); ?>" alt="">
                         <div class="p-overlay"></div>
                     </a>
 
                     <div class="p-content">
-                        <a href="/site/view?id=<?= $article->id; ?>" class="text-uppercase"><?= $article->title; ?></a>
+                        <a href="<?= Url::toRoute(['article/view', 'id' => $article->id]) ?>"
+                           class="text-uppercase"><?= $article->title; ?></a>
                         <span class="p-date"><?= $article->getDate(); ?></span>
                     </div>
                 </div>
@@ -30,7 +37,7 @@
             <ul>
                 <?php foreach ($categories as $category): ?>
                     <li>
-                        <a href="/site/category?id=<?= $category->id; ?>"><?= $category->title; ?></a>
+                        <a href="<?= Url::toRoute(['article/category', 'categoryId' => $category->id]) ?>"><?= $category->title; ?></a>
                         <span class="post-count pull-right">(<?= $category->getArticleCount(); ?>)</span>
                     </li>
                 <?php endforeach; ?>

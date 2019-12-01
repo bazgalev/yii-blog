@@ -25,6 +25,7 @@ use yii\helpers\ArrayHelper;
  * @property ArticleTag[] $articleTags
  * @property Comment[] $comments
  * @property Tag[] $tags
+ * @property User $user
  */
 class Article extends \yii\db\ActiveRecord
 {
@@ -254,8 +255,19 @@ class Article extends \yii\db\ActiveRecord
 
     public static function getDataProvider(int $pageSize = 5): ActiveDataProvider
     {
+        return self::createDataProvider(Article::find(), $pageSize);
+    }
+
+    public static function getCategoryDataProvider(int $categoryId, int $pageSize = 5): ActiveDataProvider
+    {
+        $query = Article::find()->where(['category_id' => $categoryId]);
+        return self::createDataProvider($query, $pageSize);
+    }
+
+    private static function createDataProvider(ActiveQuery $query, $pageSize = 5): ActiveDataProvider
+    {
         return new ActiveDataProvider([
-            'query' => Article::find(),
+            'query' => $query,
             'pagination' => [
                 'pageSize' => $pageSize
             ],
@@ -265,14 +277,6 @@ class Article extends \yii\db\ActiveRecord
                 ]
             ],
         ]);
-    }
-
-    public static function getCategoryDataProvider(int $categoryId, int $pageSize = 5): ActiveDataProvider
-    {
-        $dp = self::getDataProvider($pageSize);
-        $dp->query = Article::find()->where(['category_id' => $categoryId]);
-
-        return $dp;
     }
 
 }

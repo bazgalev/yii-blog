@@ -10,10 +10,11 @@ namespace app\controllers;
 
 
 use app\forms\CategoryIdForm;
+use app\forms\CommentForm;
 use app\models\Article;
 use app\models\Category;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 class ArticleController extends Controller
 {
@@ -30,6 +31,28 @@ class ArticleController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionView($id): string
+    {
+        $article = $this->findArticle($id);
+        $article->updateCounter();
+
+        $popularPosts = Article::getPopularPosts();
+
+        $model = new CommentForm();
+
+        return $this->render('view', [
+            'article' => $article,
+            'popularPosts' => $popularPosts,
+            'categories' => Category::getAll(),
+            'commentForm' => $model,
+        ]);
+    }
+
     public function actionCategory($categoryId)
     {
         $form = new CategoryIdForm(['categoryId' => $categoryId]);
@@ -39,12 +62,30 @@ class ArticleController extends Controller
             $categories = Category::getAll();
 
             return $this->render('category', [
-                'articles' => $dp->getModels(),
-                'pagination' => $dp->getPagination(),
+                'dp' => $dp,
                 'popularPosts' => $popularPosts,
                 'categories' => $categories,
             ]);
         }
-        throw new UnprocessableEntityHttpException('Invalid category id');
+        return $this->goHome();
+    }
+
+    /**
+     * @param int $id
+     * @return Article
+     * @throws NotFoundHttpException
+     */
+    protected function findArticle(int $id): Article
+    {
+        /** @var Article $article */
+        $article = Article::find()
+            ->where(['id' => $id])
+            ->with('tags')
+            ->one();
+
+        if ($article) {
+            return $article;
+        }
+        throw new NotFoundHttpException('Article does not exist');
     }
 }
