@@ -19,6 +19,9 @@ class CategoryIdForm extends Model
      */
     public $categoryId;
 
+    /**
+     * @return array
+     */
     public function rules()
     {
         return [

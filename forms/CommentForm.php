@@ -14,12 +14,13 @@ use Yii;
 class CommentForm extends Model
 {
     /**
-     * Text of the comment
-     *
      * @var string $commentText
      */
     public $commentText;
 
+    /**
+     * @return array
+     */
     public function rules()
     {
         return [
