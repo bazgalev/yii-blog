@@ -9,19 +9,29 @@
 namespace app\controllers;
 
 
-use app\models\Article;
-use app\models\Category;
-use app\models\SignupForm;
+use app\forms\LoginVkForm;
+use app\forms\SignupForm;
 use app\models\User;
+use app\services\AuthService;
 use Yii;
-use yii\filters\AccessControl;
+use yii\base\Module;
 use yii\web\Controller;
 use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
+use app\forms\LoginForm;
 
 class AuthController extends Controller
 {
+    /**
+     * @var AuthService
+     */
+    protected $authService;
+
+    public function __construct(string $id, Module $module, AuthService $service, array $config = [])
+    {
+        $this->authService = $service;
+        parent::__construct($id, $module, $config);
+    }
+
     /**
      * Login action.
      *
@@ -33,21 +43,21 @@ class AuthController extends Controller
             return $this->goHome();
         }
 
-        $request = Yii::$app->request;
+        $form = new LoginForm();
 
-        $model = new LoginForm();
-
-        if ($model->load($request->post()) && $request->isPost) {
-
-            if ($model->login()) {
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            try {
+                $user = $this->authService->login($form);
+                Yii::$app->user->login($user, $form->rememberMe ? 3600 * 24 * 30 : 0);
 
                 return $this->goBack();
+            } catch (\DomainException $e) {
+                $form->addError('password', $e->getMessage());
             }
         }
 
-
         return $this->render('login', [
-            'model' => $model,
+            'model' => $form,
         ]);
     }
 
@@ -63,39 +73,36 @@ class AuthController extends Controller
         return $this->goHome();
     }
 
+    /**
+     * @return string|Response
+     */
     public function actionSignup()
     {
-        $model = new SignupForm();
+        $form = new SignupForm();
 
-        $request = Yii::$app->request;
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            $user = $this->authService->signup($form);
+            $user->save();
 
-        if ($request->isPost) {
-            $model->load($request->post());
-
-            if ($model->signup()) {
-                return $this->redirect(['auth/login']);
-            }
+            return $this->redirect(['auth/login']);
         }
 
         return $this->render('sign-up', [
-            'model' => $model,
+            'model' => $form,
         ]);
     }
 
     public function actionLoginVk()
     {
-        $request = Yii::$app->request;
+        $form = new LoginVkForm();
 
-        $uid = $request->get('uid');
-        $firstName = $request->get('first_name');
-        $photo = $request->get('photo');
+        if ($form->load(Yii::$app->request->get()) && $form->validate()) {
+            $user = new User();
 
-        $user = new User();
-
-        if ($user->saveFromVk($uid, $firstName, $photo)) {
-            return $this->redirect(['site/index']);
+            if ($user->saveFromVk($form->uid, $form->first_name, $form->photo)) {
+                return $this->redirect(['site/index']);
+            }
         }
-
         return $this->render('login');
     }
 }

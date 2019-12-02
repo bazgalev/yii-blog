@@ -21,7 +21,10 @@ class Category extends \yii\db\ActiveRecord
         return 'category';
     }
 
-    public static function getAll()
+    /**
+     * @return Category[]
+     */
+    public static function getAll(): array
     {
         return self::find()->all();
     }
@@ -53,7 +56,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getArticles()
     {
-        return $this->hasMany(Article::className(), ['category_id' => 'id']);
+        return $this->hasMany(Article::class, ['category_id' => 'id']);
     }
 
     /**

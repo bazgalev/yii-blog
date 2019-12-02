@@ -3,6 +3,7 @@
 namespace app\modules\admin;
 use Yii;
 use yii\filters\AccessControl;
+use yii\web\ForbiddenHttpException;
 
 /**
  * admin module definition class
@@ -34,9 +35,9 @@ class Module extends \yii\base\Module
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'denyCallback' => function ($rule, $action) {
-                    throw new \yii\web\NotFoundHttpException();
+                    throw new ForbiddenHttpException();
                 },
                 'rules' => [
                     [

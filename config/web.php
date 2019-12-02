@@ -9,7 +9,14 @@ $config = [
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
+    ],
+    'container' => [
+        'singletons' => [
+            'app\services\AuthService' => [
+                'class' => 'app\services\AuthService'
+            ],
+        ],
     ],
     'components' => [
         'request' => [
@@ -22,7 +29,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
-            'loginUrl'=>'auth\login'
+            'loginUrl' => 'auth\login'
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -49,9 +56,13 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+
+                'article/<id:\d+>' => 'article/view',
+                'comment/<postId:\d+>' => 'comment/create',
+                'category/<categoryId:\d+>' => 'article/category',
+                '/' => 'article/index'
             ],
         ],
-
 
 
     ],

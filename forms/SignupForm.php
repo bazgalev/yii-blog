@@ -6,8 +6,9 @@
  * Time: 0:43
  */
 
-namespace app\models;
+namespace app\forms;
 
+use app\models\User;
 use yii\base\Model;
 
 class SignupForm extends Model
@@ -36,26 +37,9 @@ class SignupForm extends Model
             [['name', 'email', 'password'], 'required'],
             [['name'], 'string'],
             [['email'], 'email'],
-            [['email'], 'unique', 'targetClass' => 'app\models\User', 'targetAttribute' => 'email'],
+            [['email'], 'unique', 'targetClass' => User::class, 'targetAttribute' => 'email'],
         ];
     }
 
-    /**
-     * Signup new User
-     *
-     * @return bool return true on success signup or false on failure
-     */
-    public function signup()
-    {
-        if ($this->validate()) {
-            $user = new User();
-
-            $user->attributes = $this->attributes;
-
-            return $user->create();
-        } else {
-            return false;
-        }
-    }
 
 }

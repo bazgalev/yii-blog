@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $text
+ * @property string $date
  * @property int $user_id
  * @property int $article_id
  * @property int $status
@@ -36,9 +37,9 @@ class Comment extends \yii\db\ActiveRecord
         return self::find()->all();
     }
 
-    public static function getAllOrderByDate($orderBy='SORT_DESC')
+    public static function getAllOrderByDate($orderBy = 'SORT_DESC')
     {
-        return self::find()->orderBy(['date'=>SORT_DESC])->all();
+        return self::find()->orderBy(['date' => SORT_DESC])->all();
     }
 
     /**
@@ -87,6 +88,18 @@ class Comment extends \yii\db\ActiveRecord
     public function getDate()
     {
         return Yii::$app->formatter->asDate($this->date, 'long');
+    }
+
+    public static function create(string $text, int $articleId, int $userId): self
+    {
+        $comment = new Comment();
+
+        $comment->text = $text;
+        $comment->user_id = $userId;
+        $comment->article_id = $articleId;
+        $comment->date = date('Y-m-d');
+
+        return $comment;
     }
 
 }

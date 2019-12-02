@@ -28,8 +28,7 @@ class ImageUploader extends Model
     public function rules()
     {
         return [
-//            [['imageFile'], 'required'],
-            [['imageFile'], 'file', 'extensions' => 'jpg,png']
+            [['imageFile'], 'image']
         ];
     }
 
@@ -43,7 +42,7 @@ class ImageUploader extends Model
 
             $this->deleteImage($this->lastImageFile);
 
-            $this->imageFile->name=$this->generateUniqName();
+            $this->imageFile->name = $this->generateUniqName();
 
             $this->save();
         }

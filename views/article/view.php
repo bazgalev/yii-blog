@@ -7,7 +7,7 @@ use yii\helpers\Url;
 /* @var $categories array of app\models\Category models */
 /* @var $this yii\web\View */
 /* @var $comments array of app\models\Comment models */
-/* @var $commentForm app\models\CommentForm */
+/* @var $commentForm \app\forms\CommentForm */
 
 $this->title = $article->title;
 ?>
@@ -46,7 +46,7 @@ $this->title = $article->title;
                         </div>
 
                         <div class="decoration">
-                            <?php foreach ($tags as $tag): ?>
+                            <?php foreach ($article->tags as $tag): ?>
                                 <a href="<?= Url::toRoute(['site/category', 'id' => $tag->id]); ?>"
                                    class="btn btn-default"><?= $tag->title; ?></a>
                             <?php endforeach; ?>
@@ -71,7 +71,7 @@ $this->title = $article->title;
                 <!--            start of comment section-->
 
                 <?= $this->render('/partials/comment', [
-                    'comments' => $comments,
+                    'comments' => $article->comments,
                     'commentForm' => $commentForm,
                     'article' => $article,
                 ]) ?>
